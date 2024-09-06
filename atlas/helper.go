@@ -5,6 +5,7 @@ package atlas
 import (
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/DNS-OARC/ripeatlas/measurement"
 	"github.com/czerwonk/atlas_exporter/config"
@@ -50,6 +51,10 @@ func startProducer(res []*measurement.Result) chan int {
 		added := make(map[int]bool)
 
 		for _, m := range res {
+			if time.Now().Sub(time.Unix(int64(m.Timestamp()), 0)) > time.Hour {
+				continue
+			}
+
 			if _, found := added[m.PrbId()]; found {
 				continue
 			}
