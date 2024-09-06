@@ -4,6 +4,7 @@ package ping
 
 import (
 	"strconv"
+	"time"
 
 	"github.com/DNS-OARC/ripeatlas/measurement"
 	"github.com/czerwonk/atlas_exporter/probe"
@@ -52,6 +53,10 @@ func (m *pingExporter) Export(res *measurement.Result, probe *probe.Probe, ch ch
 		probe.CountryCode,
 		probe.Latitude(),
 		probe.Longitude(),
+	}
+
+	if time.Now().Sub(time.Unix(int64(res.Timestamp()), 0)) > time.Hour {
+		return
 	}
 
 	if res.Min() > 0 {

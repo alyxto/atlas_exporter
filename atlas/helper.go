@@ -4,9 +4,6 @@ package atlas
 
 import (
 	"fmt"
-	"sync"
-	"time"
-
 	"github.com/DNS-OARC/ripeatlas/measurement"
 	"github.com/czerwonk/atlas_exporter/config"
 	"github.com/czerwonk/atlas_exporter/dns"
@@ -17,6 +14,7 @@ import (
 	"github.com/czerwonk/atlas_exporter/probe"
 	"github.com/czerwonk/atlas_exporter/sslcert"
 	"github.com/czerwonk/atlas_exporter/traceroute"
+	"sync"
 )
 
 func probesForResults(res []*measurement.Result, workers uint) (map[int]*probe.Probe, error) {
@@ -51,10 +49,6 @@ func startProducer(res []*measurement.Result) chan int {
 		added := make(map[int]bool)
 
 		for _, m := range res {
-			if time.Now().Sub(time.Unix(int64(m.Timestamp()), 0)) > time.Hour {
-				continue
-			}
-
 			if _, found := added[m.PrbId()]; found {
 				continue
 			}
